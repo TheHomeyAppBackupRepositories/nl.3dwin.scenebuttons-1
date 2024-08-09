@@ -41,7 +41,15 @@ class SceneButton extends Device {
       let device = await api.devices.getDevice({ id: d.id });
       
       for(let cap of Object.values(d.capabilities)) {
-        device.setCapabilityValue(cap.id, cap.value);
+        try {
+          if(cap.value == null) {
+            this.log("No value", device.name, cap.id);
+            continue;
+          }
+          device.setCapabilityValue(cap.id, cap.value);
+        } catch(error) {
+          this.log(error);
+        }
 
         // api.devices.setCapabilityValue({
         //   deviceId: d.id,
